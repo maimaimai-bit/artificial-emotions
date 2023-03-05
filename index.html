@@ -1,12 +1,249 @@
 <!DOCTYPE html>
-<html lang="en-US">
-	<head>
-		<meta charset="utf-8">
-		<title>Artifical Emotions (AE)</title>
+<html lang="en">
+  <meta charset="UTF-8">
+  <title>Artificial Emotions (AE)</title>
+  <head>
+    <script defer src="dist/face-api.min.js"></script>
+    <script defer src="dist/main.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,600;1,500;1,600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+      html, body {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+      .container {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTJkMjYyYjdkNDhkNzFmOTBmMWRiZjI2NzJmMGE0Mzc2Y2U2MTliNiZjdD1n/59hmBy29CkwvxqLvwW/giphy.gif");
+      }
+      #left, #right {
+        width: 50%;
+        height: 100%;
+        float: left;
+        display: grid;
+      }
+      #left-overlay {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 50%;
+        height: 100%;
+      }
+      #video {
+        width: 435px;
+        height: auto;
+        margin: auto;
+        filter: hue-rotate(-200deg) brightness(.85) sepia(.55) contrast(1.5) saturate(3) hue-rotate(200deg);
+        -webkit-mask-image: url(dist/flower-mask.png);
+        -webkit-mask-position: center;
+        -webkit-mask-size: auto 110%;
+        -webkit-mask-repeat: no-repeat;
+      }
+      #poem-div {
+        width: 385px;
+        margin: auto;
+      }
+      #poem {
+        font-family: 'Space Mono', monospace;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 21px;
+        background-color: #fff;
+        padding: 18px 20px;
+      }
+      #opening {
+        color: #C4464B;
+      }
+      #happy {
+        color: #D47949;
+      }
+      #sad {
+        color: #ECB981;
+      }
+      #angry {
+        color: #61CDAE;
+      }
+      #surprised {
+        color: #67BDCD;
+      }
+      #disgusted {
+        color: #7E90DB;
+      }
+      #ending {
+        color: #A45AC4;
+      }
+      #left-overlay > p {
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        color: #fff;
+      }
+      #instruction {
+        margin-top: 60px;
+        font-size: 17px;
+        font-weight: 600;
+        --animate-duration: 1.8s;
+      }
+      #state {
+        position: relative;
+        z-index: 1;
+        margin-top: 40px;
+        margin-bottom: 50px;
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: 0.15rem;
+        text-transform: uppercase;
+        text-shadow: -3px 3px #C4464B,
+                    -6px 6px #DC6ECA,
+                    -9px 9px #A45AC4,
+                    -12px 12px #7E90DB,
+                    -15px 15px #67BDCD,
+                    -18px 18px #61CDAE,
+                    -21px 21px #ECB981,
+                    -24px 24px #D47949,
+                    -27px 27px #C4464B;
+      }
+      .bottom-text {
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 17px;
+        font-weight: 600;
+
+        position: relative;
+        margin-top: 0px;
+        bottom: 55px;
+
+        color: transparent;
+        text-shadow: 1.7px -1.7px #fff;
+        background: linear-gradient(to right, #A45AC4, #67BDCD , #61CDAE, #DC6ECA, #A45AC4);
+        -webkit-background-clip: text;
+        -webkit-background-size: 300% 100%;
+        animation: rainbow_animation 3s ease-in-out infinite;
+      }
+      @keyframes rainbow_animation {
+        0%,100% {
+            background-position: 0 0;
+        }
+        50% {
+            background-position: 100% 0;
+        }
+      }
+      #main-overlay {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        display: grid;
+      }
+      #statement-bg {
+        width: 600px;
+        height: auto;
+        margin: auto;
+        background-color: #fff;
+      }
+      #statement {
+        font-family: 'Space Mono', monospace;
+        font-size: 15px;
+        line-height: 20px;
+        padding: 14px 28px;
+      }
+      #statement > a {
+        color: #67BDCD;
+      }
+      #close {
+        font-size: 24px;
+        padding-left: 268px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="main" class="container" style="display: block;">
+      <div id="left-overlay">
+        <p id="instruction" class="animate__animated animate__pulse animate__infinite">think of an emotion and make a face!</p>
+        <p id="state"></p>
+      </div>
+
+      <div id="left">
+        <video id="video" autoplay muted></video>
+      </div>
+
+      <div id="right">
+        <div id="poem-div">
+          <p id="poem">
+            <a id="opening" class="animate__animated animate__flash">
+              <i>Emotions</i> run deep, <br>
+              Rising like <i>waves in the sea,</i> <br>
+              Heart's ebb and flow. <br>
+            </a>
+            
+            <a id="happy" class="emotion animate__animated animate__flash" style="display: none;">
+              <br> 
+              Sunshine on my face, <br>
+              Heart full of <i>love and laughter,</i> <br>
+              <i>Joy</i> in every step. <br>
+            </a>
+
+            <a id="sad" class="emotion animate__animated animate__flash" style="display: none;">
+              <br>
+              <i>Rainy day</i> so gray, <br>
+              Tears fall like drops from the sky, <br>
+              <i>Heartache</i> knows no end. <br> 
+            </a>
+
+            <a id="angry" class="emotion animate__animated animate__flash" style="display: none;">
+              <br>
+              <i>Tempest</i> in my soul, <br>
+              <i>Rage</i> like <i>thunder</i> in my heart, <br>
+              Fury consumes me. <br> 
+            </a>
     
-    Reenie Beanie, Pangolin, Indie Flower
-	</head>
-	<body>
-		
-	</body>
+            <a id="surprised" class="emotion animate__animated animate__flash" style="display: none;">
+              <br>
+              <i>Unexpected</i> guest, <br>
+              Heart leaps with wonder and joy, <br>
+              <i>Sweet surprise,</i> welcome. <br> 
+            </a>
+
+            <a id="disgusted" class="emotion animate__animated animate__flash" style="display: none;">
+              <br>
+              Sour taste on my tongue, <br>
+              <i>Sickened</i> by what I have seen, <br>
+              <i>Disgust</i> fills my heart. <br> 
+            </a>
+
+            <a id="ending" class="animate__animated animate__flash" style="display: none;">
+              <br>
+              Amidst <i>sun and rain,</i> <br>
+              Emotions take root and grow, <br>
+              Hearts <i>bloom like flowers.</i> 
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <p id="question" class="bottom-text" style="display: none;"><i>Artificial Emotions? What does that mean?</i></p>
+    </div>
+
+    <div id="main-overlay" class="container" style="display: none;">
+      <div id="statement-bg">
+        <p id="statement">
+          With <a href="https://www.jesuisundev.com/en/lockdown-lets-code-a-dumb-idea-with-javascript-ai/">some help from the Internet</a>, this project uses the <a href="https://github.com/justadudewhohacks/face-api.js">facial recognition technology</a> built on top of <a href="https://www.tensorflow.org/js/">tensorflow.js</a>, a data processing and machine learning library. <br>
+          The accompanying poem is courtesy of <a href="https://openai.com/blog/chatgpt">Chat GPT</a>, an anthropomorphic AI implementation that answers questions, prompts, and requests in conversational human language. <br> <br>
+          What now? The AIs are writing poetry and responding to your most subtle expressions? They surely they cannot get more human than that! <a href="https://fortune.com/2019/05/07/artificial-intelligence-mind-reading-technology/">(or can they?)</a> <br>
+          Meanwhile, you are the "artificial" one. It's not like you were actually feeling happy, sad, or angry when you made those faces to the camera.
+          If anything, you were merely carrying out the machine's requests... Who is the real robot here? <br> <br>
+          I suppose, however, you can say that the fact you were faking it reflects more on them than on you. How they couldn't have told! 
+          They know a surpised face, but does they actually know <i>surprise</i>? <br> <br>
+          Well, that was a fun interaction... Worrying about a Blade Runner future when AI becomes sentient is getting ahead of ourselves, but we've gotta admit that was impressive. <br>
+          After all, these technologies would have been inconceivable 10 years ago. Who can tell what the next 10 years will look like? <br> <br>
+          <a id="close">&#x2715</a>
+        </p>
+      </div>
+    </div>
+  </body>
 </html>
