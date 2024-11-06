@@ -1,19 +1,16 @@
 {
-  "name": "confinement-mimic",
+  "name": "emotion-visualizer",
   "version": "1.0.0",
-  "description": "",
+  "description": "Real-time emotion visualization using face detection",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js localhost 8080"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "morgan": "~1.9.1"
+    "express": "^4.17.1"
   },
   "devDependencies": {
-    "nodemon": "1.18.4"
-  },
-  "keywords": []
+    "nodemon": "^2.0.7"
+  }
 }
