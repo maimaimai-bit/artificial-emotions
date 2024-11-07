@@ -9,10 +9,10 @@ const EMOTION_THRESHOLD = 200;
 let currentAudio = null;
 let currentFadeInterval = null;
 const audioElements = {
-    happy: new Audio('dist/music/happy.mp3'),
-    sad: new Audio('dist/music/sad.mp3'),
-    angry: new Audio('dist/music/angry.mp3'),
-    surprised: new Audio('dist/music/surprised.mp3')
+    happy: new Audio('./dist/music/happy.mp3'),
+    sad: new Audio('./dist/music/sad.mp3'),
+    angry: new Audio('./dist/music/angry.mp3'),
+    surprised: new Audio('./dist/music/surprised.mp3')
 };
 
 // Configure all audio elements
